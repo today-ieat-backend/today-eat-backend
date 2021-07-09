@@ -2,14 +2,14 @@ const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
-
+const nunjucks = require('nunjucks');
 const path = require('path');
 
 
 
 const { sequelize } = require('./models');
 
-const pageRouter = require('./routes/comment');
+const commentRouter = require('./routes/comment');
 const userRouter = require('./routes/user');
 const menuRouter = require('./routes/menu');
 
@@ -20,6 +20,11 @@ const app = express();
 
 
 app.set('port', process.env.PORT || 3000);
+app.set('view engine', 'html');
+nunjucks.configure('views', {
+    express: app,
+    watch: true,
+});
 
 sequelize.sync({ force: false })
     .then(() => {
@@ -41,9 +46,13 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 
 //router
-app.use('/', pageRouter);
+app.get('/', (req, res) => {
+    console.log("여기 안들어놈");
+    res.render('index');
+});
 app.use('/user', userRouter);
-app.use('/board', boardRouter);
+app.use('/menu', menuRouter);
+app.use('/comments', commentRouter);
 
 //error router
 app.use((req, res, next) => {
