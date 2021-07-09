@@ -9,9 +9,9 @@ const path = require('path');
 
 const { sequelize } = require('./models');
 
-const pageRouter = require('./routes/page');
+const pageRouter = require('./routes/comment');
 const userRouter = require('./routes/user');
-const boardRouter = require('./routes/board');
+const menuRouter = require('./routes/menu');
 
 
 dotenv.config();
