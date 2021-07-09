@@ -3,10 +3,21 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/today-ieat-backend/today-eat-backend.git"
+  },
+  "author": "lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/today-ieat-backend/today-eat-backend/issues"
+  },
+  "homepage": "https://github.com/today-ieat-backend/today-eat-backend#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
