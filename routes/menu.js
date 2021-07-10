@@ -32,9 +32,8 @@ const upload = multer({
 
 //메뉴 카테고리 지정하면, 추천 음식 보내기
 router.get('/', async (req, res, next) => {
-    const { category1, category2, category3 } = req.query;
-
     try {
+        const { category1, category2, category3 } = req.query;
         const menuList = await Menu.findAll({
             where: {
                 [Op.or]: [{ category1 }, { category2 }, { category3 }],
@@ -45,8 +44,69 @@ router.get('/', async (req, res, next) => {
     } catch (error) {
         console.error(error);
         res.json({ "ok": false, "message": '실패' })
-    }
+    };
+});
 
+router.post('/', upload.single('img'), async (req, res, next) => {
+    try {
+
+        let { name, category1, category2, category3, id: userId } = req.body;
+        img = req.file ? `/img/${req.file.filename}` : "/img/default.jpg";
+
+        await Menu.create({
+            name,
+            img,
+            category1,
+            category2,
+            category3,
+            userId,
+        });
+        res.json({ "ok": true, "message": '메뉴등록 성공' });
+    } catch (error) {
+        console.error(error);
+        res.json({ "ok": false, "message": '메뉴등록 실패' });
+    }
+});
+
+
+router.patch('/:id', upload.single('img'), async (req, res, next) => {
+    try {
+
+        const { id } = req.params;
+
+        let { name, category1, category2, category3 } = req.body;
+        img = req.file ? `/img/${req.file.fieldname}` : "/img/default.jpg";
+
+        await Menu.update({
+            name,
+            img,
+            category1,
+            category2,
+            category3,
+        }, {
+            where: { id }
+        });
+        res.json({ "ok": true, "message": '메뉴수정 성공' });
+    } catch (error) {
+        console.error(error);
+        res.json({ "ok": false, "message": '메뉴수정 실패' });
+    }
+});
+
+
+router.delete('/:id', upload.single('img'), async (req, res, next) => {
+    try {
+
+        const { id } = req.params;
+        await Menu.destroy(
+            {
+                where: { id }
+            });
+        res.json({ "ok": true, "message": '메뉴삭제 성공' });
+    } catch (error) {
+        console.error(error);
+        res.json({ "ok": false, "message": '메뉴삭제 실패' });
+    }
 });
 
 
