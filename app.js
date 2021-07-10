@@ -50,6 +50,14 @@ app.get('/', (req, res) => {
     console.log("여기 안들어놈");
     res.render('index');
 });
+
+app.get('/register', (req, res) => {
+    res.render('register.html');
+});
+
+app.get('/login', (req, res) => {
+    res.render('login.html');
+});
 app.use('/user', userRouter);
 app.use('/menu', menuRouter);
 app.use('/comments', commentRouter);

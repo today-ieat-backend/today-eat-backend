@@ -31,10 +31,10 @@
     "mysql2": "^2.2.5",
     "nunjucks": "^3.2.3",
     "pm2": "^5.1.0",
-    "sequelize": "^6.6.4",
-    "sequelize-cli": "^6.2.0"
+    "sequelize": "^6.6.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.10"
+    "nodemon": "^2.0.10",
+    "sequelize-cli": "^6.2.0"
   }
 }
