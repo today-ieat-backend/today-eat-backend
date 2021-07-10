@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 
 const Menu = require('../models/menu');
+const User = require('../models/user');
 
 const router = express.Router();
 
@@ -45,6 +46,39 @@ router.get('/', async (req, res, next) => {
         console.error(error);
         res.json({ "ok": false, "message": '실패' })
     };
+});
+
+
+
+router.get('/like', async (req, res, next) => {
+    try {
+        const result = await Menu.findAll({
+            order: [['like', 'DESC'], ['createdAt', 'DESC']],
+            limit: 10,
+        });
+
+        res.json({ "ok": true, "message": '순위불러오기 성공', result });
+    } catch (error) {
+        console.error(error);
+        res.json({ "ok": false, "message": '순위불러오기 실패' });
+    }
+});
+
+
+router.get('/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await Menu.findOne({
+            where: { id },
+            include: [{
+                model: User,
+            }]
+        });
+        res.json({ "ok": true, "message": '메뉴상세가져오기 성공', result });
+    } catch (error) {
+        console.error(error);
+        res.json({ "ok": false, "message": '메뉴상세가져오기 실패' });
+    }
 });
 
 router.post('/', upload.single('img'), async (req, res, next) => {
@@ -109,6 +143,26 @@ router.delete('/:id', upload.single('img'), async (req, res, next) => {
     }
 });
 
+
+router.patch('/:id/like', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const prevLike = await Menu.findByPk(id,
+            {
+                attributes: ['like']
+            });
+        const currentLike = prevLike.like + 1;
+        await Menu.update({
+            like: currentLike,
+        }, {
+            where: { id }
+        });
+        res.json({ "ok": true, "message": '좋아요 성공' });
+    } catch (error) {
+        console.error(error);
+        res.json({ "ok": false, "message": '좋아요 실패' });
+    }
+});
 
 
 
