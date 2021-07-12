@@ -111,8 +111,14 @@ router.patch('/:id', upload.single('img'), async (req, res, next) => {
 
         const { id } = req.params;
 
-        let { name, description, category1, category2, category3 } = req.body;
+        let { name, description, category1, category2, category3, id: userId } = req.body;
         img = req.file ? `/img/${req.file.fieldname}` : "/img/default.jpg";
+
+        const result = await Menu.findOne({
+            where: { id },
+        });
+
+        if (result.userId !== +userId) return res.json({ "ok": false, "message": '작성자인 사람만 수정할 수 있습니다.' });
 
         await Menu.update({
             name,
@@ -136,6 +142,7 @@ router.delete('/:id', upload.single('img'), async (req, res, next) => {
     try {
 
         const { id } = req.params;
+
         await Menu.destroy(
             {
                 where: { id }
