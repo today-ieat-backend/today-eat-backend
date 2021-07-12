@@ -13,6 +13,9 @@ module.exports = class Menu extends Sequelize.Model {
                 type: Sequelize.INTEGER,
                 defaultValue: 0
             },
+            description: {
+                type: Sequelize.STRING,
+            },
             category1: {
                 type: Sequelize.STRING,
             },

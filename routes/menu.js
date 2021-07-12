@@ -20,6 +20,7 @@ try {
 const upload = multer({
     storate: multer.diskStorage({
         destination(req, file, cb) {
+            console.log('file!!!', file)
             cb(null, 'uploads');
         },
         filename(req, file, cb) {
@@ -41,7 +42,7 @@ router.get('/', async (req, res, next) => {
             },
             order: [['like', 'DESC'], ['createdAt', 'DESC']],
         })
-        res.json({ "ok": true, "menu-list": menuList });
+        res.json({ "ok": true, menuList });
     } catch (error) {
         console.error(error);
         res.json({ "ok": false, "message": '실패' })
@@ -84,18 +85,20 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', upload.single('img'), async (req, res, next) => {
     try {
 
-        let { name, category1, category2, category3, id: userId } = req.body;
+        let { name, description, category1, category2, category3, id: userId } = req.body;
         img = req.file ? `/img/${req.file.filename}` : "/img/default.jpg";
 
-        await Menu.create({
+        const result = await Menu.create({
             name,
             img,
+            description,
             category1,
             category2,
             category3,
             userId,
         });
-        res.json({ "ok": true, "message": '메뉴등록 성공' });
+        console.log(result);
+        res.json({ "ok": true, "message": '메뉴등록 성공', result });
     } catch (error) {
         console.error(error);
         res.json({ "ok": false, "message": '메뉴등록 실패' });
@@ -108,11 +111,12 @@ router.patch('/:id', upload.single('img'), async (req, res, next) => {
 
         const { id } = req.params;
 
-        let { name, category1, category2, category3 } = req.body;
+        let { name, description, category1, category2, category3 } = req.body;
         img = req.file ? `/img/${req.file.fieldname}` : "/img/default.jpg";
 
         await Menu.update({
             name,
+            description,
             img,
             category1,
             category2,
