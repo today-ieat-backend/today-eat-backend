@@ -54,6 +54,12 @@ app.use('/user', userRouter);
 app.use('/menu', menuRouter);
 app.use('/comments', commentRouter);
 
+// comments router
+app.get('/comments', (req, res) => {
+    console.log("comments Page");
+    res.render('comments');
+});
+
 //error router
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다!!`);
