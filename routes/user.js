@@ -6,13 +6,11 @@ const { Op } = require('sequelize');
 const users = require('../models/user');
 const authMiddleware = require('../middlewares/auth-middleware');
 const Joi = require('joi');
-
 const router = express.Router();
 
 app.use('/user', express.urlencoded({ extended: false }), router);
 
 app.use(express.json());
-
 
 const postUsersSchema = Joi.object({
     userId: Joi.string().alphanum().min(3).max(20).required(),
@@ -46,8 +44,6 @@ router.post('/register', async (req, res) => {
             });
             return;
         }
-
-
 
         // 아이디 중복 체크
         const existUserId = await users.findAll({
@@ -86,7 +82,7 @@ router.post('/register', async (req, res) => {
             message: '회원가입 성공'
         });
     } catch (error) {
-        console.log('errorrrrr', error);
+        console.log('회원가입 catch error', error);
         res.status(400).send({
             'ok': false,
             message: '회원가입 실패'
@@ -99,7 +95,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const { userId, password } = req.body;
-        const user = await users.findOne({ where: {userId: userId} });
+        const user = await users.findOne({ where: { userId: userId } });
         if (!user) {
             res.status(400).send({
                 message: 'ID나 비밀번호가 잘못됐습니다.',
@@ -110,11 +106,14 @@ router.post('/login', async (req, res) => {
         const authenticate = await bcrypt.compare(password, user.hashedPassword);
         if (authenticate === true) {
             const nickname = user.nickname;
+            const id = user.id;
 
             const token = jwt.sign({
                 userId: user.userId
             }, 'secretPlease',
                 { expiresIn: '1h' });
+            //토큰 시간이 끝날경우 그에 맞는 에러값을 보내줘보자.
+
             res.send({
                 token: token,
                 result: {
@@ -123,7 +122,6 @@ router.post('/login', async (req, res) => {
                         nickname: nickname,
                         userId: userId
                     }
-
                 },
             });
         } else {
@@ -133,22 +131,25 @@ router.post('/login', async (req, res) => {
             return;
         }
     } catch (error) {
-        console.log('login ERROR', error);
+        console.log('login catch ERROR', error);
         res.status(400).send({
             'ok': false,
-            message: '로그인 정보가 틀렸습니다.'
+            message: '로그인 실패'
         })
     }
 
 });
 
-router.get('/users/me', authMiddleware, async (req, res) => {
+router.get('/token', authMiddleware, async (req, res) => {
     const { user } = res.locals;
-    console.log('user', user);
     res.send({
-        user,
+        'ok': true,
+        user: {
+            id: user.id,
+            userId: user.userId,
+            nickname: user.nickname,
+        }
     });
 })
-
 
 module.exports = router;

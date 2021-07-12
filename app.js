@@ -5,8 +5,6 @@ const dotenv = require('dotenv');
 const nunjucks = require('nunjucks');
 const path = require('path');
 
-
-
 const { sequelize } = require('./models');
 
 const commentRouter = require('./routes/comment');
@@ -40,7 +38,7 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 app.use('/img', express.static(path.join(__dirname, 'uploads')));
 
 app.use(express.json());
-app.use(express.urlencoded({ extend: false }));
+app.use(express.urlencoded({ extend: true }));
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
@@ -51,13 +49,7 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-app.get('/register', (req, res) => {
-    res.render('register.html');
-});
 
-app.get('/login', (req, res) => {
-    res.render('login.html');
-});
 app.use('/user', userRouter);
 app.use('/menu', menuRouter);
 app.use('/comments', commentRouter);
