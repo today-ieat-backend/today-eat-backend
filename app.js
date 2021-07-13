@@ -7,6 +7,7 @@ const path = require('path');
 
 const { sequelize } = require('./models');
 
+const { swaggerUi, specs } = require('./swagger');
 const commentRouter = require('./routes/comment');
 const userRouter = require('./routes/user');
 const menuRouter = require('./routes/menu');
@@ -43,12 +44,12 @@ app.use(express.urlencoded({ extend: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 
-//router
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+
 app.get('/', (req, res) => {
-    console.log("여기 안들어놈");
     res.render('index');
 });
-
 
 app.use('/user', userRouter);
 app.use('/menu', menuRouter);
