@@ -49,6 +49,18 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
+app.get('/register', (req, res) => {
+    res.render('register.html');
+});
+
+app.get('/login', (req, res) => {
+    res.render('login.html');
+});
+app.get('/token', (req, res) => {
+    res.render('token.html');
+});
+
+
 
 app.use('/user', userRouter);
 app.use('/menu', menuRouter);
@@ -79,6 +91,11 @@ app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.render('error');
 });
+
+
+
+
+
 
 app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트 대기중....');

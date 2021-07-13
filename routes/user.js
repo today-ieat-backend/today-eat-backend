@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 const users = require('../models/user');
+const comments = require('../models/comment');
+const menus = require('../models/menu');
 const authMiddleware = require('../middlewares/auth-middleware');
 const Joi = require('joi');
 const router = express.Router();
@@ -142,14 +144,34 @@ router.post('/login', async (req, res) => {
 
 router.get('/token', authMiddleware, async (req, res) => {
     const { user } = res.locals;
+    const currentId = user.id;
+    const entries = await menus.findAll({
+        where: { userId: currentId }
+    });
+
     res.send({
         'ok': true,
         user: {
             id: user.id,
             userId: user.userId,
             nickname: user.nickname,
-        }
+        },
+        entries: entries,
     });
 })
+router.get('/entries', authMiddleware, async (req, res) => {
+    const { user } = res.locals;
+    const currentId = user.id;
+    const entries = await menus.findAll({
+        where: { userId: currentId },
+        attributes: ['name', 'description', 'img', 'like', 'userId', 'id', 'category1','category2','category3'],
+    });
+
+    res.send({
+        'ok': true,
+        entries: entries,
+    });
+})
+
 
 module.exports = router;
