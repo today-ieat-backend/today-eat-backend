@@ -7,6 +7,7 @@ const users = require('../models/user');
 const comments = require('../models/comment');
 const menus = require('../models/menu');
 const authMiddleware = require('../middlewares/auth-middleware');
+require('dotenv').config();
 const Joi = require('joi');
 const router = express.Router();
 
@@ -112,7 +113,7 @@ router.post('/login', async (req, res) => {
 
             const token = jwt.sign({
                 userId: user.userId
-            }, 'secretPlease',
+            }, process.env.JWT_SECRET,
                 { expiresIn: '1h' });
             //토큰 시간이 끝날경우 그에 맞는 에러값을 보내줘보자.
 
@@ -159,6 +160,7 @@ router.get('/token', authMiddleware, async (req, res) => {
         entries: entries,
     });
 })
+
 router.get('/entries', authMiddleware, async (req, res) => {
     const { user } = res.locals;
     const currentId = user.id;
