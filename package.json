@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production pm2 start app.js",
-    "dev": "nodemon app"
+    "dev": "cross-env NODE_ENV=production nodemon app"
   },
   "repository": {
     "type": "git",

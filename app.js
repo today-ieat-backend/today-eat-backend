@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const nunjucks = require('nunjucks');
 const path = require('path');
+const cors = require('cors');
 
 const { sequelize } = require('./models');
 
@@ -40,6 +41,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extend: true }));
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
+
+app.use(
+    cors({ origin: '*', credentials: true, }
+    ));
+
 
 //router
 app.get('/', (req, res) => {
