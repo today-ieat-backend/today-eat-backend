@@ -5,6 +5,7 @@ const Menu = require('../models/menu');
 const User = require('../models/user');
 const Comment = require('../models/comment')
 
+const router = express.Router();
 
 // 저장
 router.post('/comments', async (req, res) => {
