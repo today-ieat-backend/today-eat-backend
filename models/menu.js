@@ -5,6 +5,8 @@ module.exports = class Menu extends Sequelize.Model {
         return super.init({
             name: {
                 type: Sequelize.STRING,
+                allowNull: false,
+                unique: true,
             },
             img: {
                 type: Sequelize.STRING,

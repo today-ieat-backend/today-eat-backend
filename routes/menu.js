@@ -23,7 +23,7 @@ try {
 
 
 const upload = multer({
-    storate: multer.diskStorage({
+    storage: multer.diskStorage({
         destination(req, file, cb) {
             console.log('file!!!', file)
             cb(null, 'uploads');
@@ -89,7 +89,6 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', upload.single('img'), async (req, res, next) => {
     try {
-
         let { name, description, category1, category2, category3, id: userId } = req.body;
         img = req.file ? `/img/${req.file.filename}` : "/img/default.jpg";
 
