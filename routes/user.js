@@ -145,10 +145,6 @@ router.post('/login', async (req, res) => {
 
 router.get('/token', authMiddleware, async (req, res) => {
     const { user } = res.locals;
-    const currentId = user.id;
-    const entries = await menus.findAll({
-        where: { userId: currentId }
-    });
 
     res.send({
         'ok': true,
@@ -156,8 +152,7 @@ router.get('/token', authMiddleware, async (req, res) => {
             id: user.id,
             userId: user.userId,
             nickname: user.nickname,
-        },
-        entries: entries,
+        }
     });
 })
 
@@ -166,7 +161,7 @@ router.get('/entries', authMiddleware, async (req, res) => {
     const currentId = user.id;
     const entries = await menus.findAll({
         where: { userId: currentId },
-        attributes: ['name', 'description', 'img', 'like', 'userId', 'id', 'category1','category2','category3'],
+        attributes: ['name', 'description', 'img', 'like', 'userId', 'id', 'category1', 'category2', 'category3'],
     });
 
     res.send({

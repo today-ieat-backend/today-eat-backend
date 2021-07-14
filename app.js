@@ -11,11 +11,9 @@ const commentRouter = require('./routes/comment');
 const userRouter = require('./routes/user');
 const menuRouter = require('./routes/menu');
 
-
 dotenv.config();
 
 const app = express();
-
 
 app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'html');
@@ -42,7 +40,6 @@ app.use(express.urlencoded({ extend: true }));
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-
 //router
 app.get('/', (req, res) => {
     console.log("여기 안들어놈");
@@ -59,8 +56,6 @@ app.get('/login', (req, res) => {
 app.get('/token', (req, res) => {
     res.render('token.html');
 });
-
-
 
 app.use('/user', userRouter);
 app.use('/menu', menuRouter);
@@ -91,11 +86,6 @@ app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.render('error');
 });
-
-
-
-
-
 
 app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트 대기중....');
