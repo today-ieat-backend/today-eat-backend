@@ -12,11 +12,9 @@ const commentRouter = require('./routes/comment');
 const userRouter = require('./routes/user');
 const menuRouter = require('./routes/menu');
 
-
 dotenv.config();
 
 const app = express();
-
 
 app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'html');
@@ -43,12 +41,20 @@ app.use(express.urlencoded({ extend: true }));
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
-
+//router
 app.get('/', (req, res) => {
     res.render('index');
+});
+
+app.get('/register', (req, res) => {
+    res.render('register.html');
+});
+
+app.get('/login', (req, res) => {
+    res.render('login.html');
+});
+app.get('/token', (req, res) => {
+    res.render('token.html');
 });
 
 app.use('/user', userRouter);

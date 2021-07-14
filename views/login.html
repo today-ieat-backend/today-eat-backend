@@ -10,12 +10,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.4.0/socket.io.js"></script>
 
-    <title>메인 페이지</title>
+    <title>로그인</title>
     <script>
-        // let user;
-        // getSelf(function (u) {
-        //     user = u;
-        // });
         function getSelf(callback) {
             $.ajax({
                 type: 'GET',
@@ -37,48 +33,62 @@
                 },
             });
         }
-
-
-
-        function signout() {
-            localStorage.clear();
-            window.location.href = '/login';
+        if (localStorage.getItem("token")) {
+            getSelf(function () {
+                alert("이미 로그인이 되어있습니다. 메인 페이지로 이동합니다.");
+                window.location.href = "/";
+            });
         }
 
-        function entries() {
-            $.ajax({
-                type: "GET",
-                headers: {
-                    authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-                url: `/user/entries`,
-                data: {},
-                success: function (response) {
-                    console.log("entries API successful");
-                    console.log(response);
-                },
-                // error: function (error) {
-                //     window.alert(error.responseJSON.message);
-                // }
-            })
-        };
-        entries();
+        function signin() {
+            let userId = $('#userId').val();
+            let password = $('#pw').val();
 
+            $.ajax({
+                type: "POST",
+                url: `/user/login`,
+                data: {
+                    userId: userId,
+                    password: password,
+                },
+                success: function (response) {
+                    console.log('login successful');
+                    localStorage.setItem("token", response.token);
+                    window.location.replace("/");
+                },
+                error: function (error) {
+                    window.alert(error.responseJSON.message);
+                }
+            })
+        }
+
+        function noLogin() {
+            window.location.href = '/';
+        }
     </script>
 </head>
 
 <body>
 
-
-    <button onclick="signout()">로그 아웃</button>
+    <h1>
+        로그인을 하쇼
+    </h1>
 
     <div>
-        <button onclick="window.location.href='/login'">로그인</button>
+        <button onclick="noLogin()">로그인 없이 글 보기</button>
     </div>
+
+    <div>
+        ID: <input id="userId" type="text">
+    </div>
+    <div>
+        비밀번호: <input id="pw" type="password">
+    </div>
+    <button onclick="signin()">로그인</button>
+
     <div>
         <button onclick="window.location.href='/register'">회원가입</button>
     </div>
-
 </body>
 
 </html>
