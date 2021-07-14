@@ -1,4 +1,5 @@
 const express = require('express');
+const app = express();
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
@@ -13,7 +14,13 @@ const menuRouter = require('./routes/menu');
 
 dotenv.config();
 
-const app = express();
+
+
+const cors = require('cors');
+app.use(cors({
+    origin: '*',
+    credentials: true,
+}));
 
 app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'html');
