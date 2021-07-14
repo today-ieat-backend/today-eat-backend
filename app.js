@@ -8,7 +8,7 @@ const cors = require('cors');
 
 const { sequelize } = require('./models');
 
-const { swaggerUi, specs } = require('./swagger');
+const { swaggerUi, specs } = require('./swagger/swagger');
 const commentRouter = require('./routes/comment');
 const userRouter = require('./routes/user');
 const menuRouter = require('./routes/menu');
@@ -17,7 +17,7 @@ dotenv.config();
 
 const app = express();
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 4000);
 app.set('view engine', 'html');
 nunjucks.configure('views', {
     express: app,
@@ -46,6 +46,8 @@ app.use(
     cors({ origin: '*', credentials: true, }
     ));
 
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 //router
 app.get('/', (req, res) => {

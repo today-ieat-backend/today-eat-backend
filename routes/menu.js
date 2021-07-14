@@ -37,7 +37,10 @@ const upload = multer({
 });
 
 
-//메뉴 카테고리 지정하면, 추천 음식 보내기
+/**
+ *  @swagger
+ *    $ref: 'swagger/menuAPI.yml'
+ */
 router.get('/', async (req, res, next) => {
     try {
         const { category1, category2, category3 } = req.query;
@@ -124,8 +127,7 @@ router.patch('/:id', upload.single('img'), async (req, res, next) => {
         const { id } = req.params;
 
         let { name, description, category1, category2, category3, id: userId } = req.body;
-        img = req.file ? `/img/${req.file.fieldname}` : "/img/default.jpg";
-
+        img = req.file ? `/img/${req.file.filename}` : "/img/default.jpg";
         const result = await Menu.findOne({
             where: { id },
         });
