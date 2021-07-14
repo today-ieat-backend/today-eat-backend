@@ -92,6 +92,14 @@ router.post('/', upload.single('img'), async (req, res, next) => {
         let { name, description, category1, category2, category3, id: userId } = req.body;
         img = req.file ? `/img/${req.file.filename}` : "/img/default.jpg";
 
+        const dupChkname = await Menu.findOne({
+            where: { name }
+        });
+        if (dupChkname) {
+            res.json({ "ok": false, "message": '이미 등록된 메뉴입니다.' });
+            return
+        }
+
         const result = await Menu.create({
             name,
             img,
