@@ -5,9 +5,8 @@ const Comment = require("./comment");
 
 
 const env = process.env.NODE_ENV || 'development';
-console.log("env!@#!@#!23", env);
 const config = require("../config/config")[env];
-console.log("config!@#!@#!23", config);
+
 const db = {};
 
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
