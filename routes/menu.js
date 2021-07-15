@@ -46,7 +46,7 @@ router.get('/', async (req, res, next) => {
         const { category1, category2, category3 } = req.query;
         const menuList = await Menu.findAll({
             where: {
-                [Op.or]: [{ category1 }, { category2 }, { category3 }],
+                [Op.and]: [{ category1 }, { category2 }, { category3 }],
             },
             order: [['like', 'DESC'], ['createdAt', 'DESC']],
         })

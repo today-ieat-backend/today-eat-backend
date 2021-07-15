@@ -8,7 +8,7 @@ const options = {
             version: '1.0.0',
             description: 'Test API with express',
         },
-        host: '13.125.145.106',
+        host: '3.36.91.31',
         basePath: '/'
     },
     apis: ['./routes/*.js', './swagger/*']

@@ -15,7 +15,7 @@ router.post('/comments', async (req, res) => {
     // const { id: menuId } = req.params
 
     const { comment, userId, menuId } = req.body // 지현님께 userId 요청
-
+    console.log(comment, userId, menuId);
     const result = await Comment.create({
         comment,
         menuId,
@@ -78,14 +78,13 @@ router.put("/comments/:id", async (req, res) => {
             where: { id },
             attributes: ["userId"]
         })
-        console.log(commenter)
         // +(숫자형변환) !== 
         if (+userId !== commenter) {
             return res.json({ "ok": false, "message": '작성자가 아닙니다' });
         }
 
         await Comment.update({
-            description
+            comment: description
         }, {
             where: { id }
         });
