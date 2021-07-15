@@ -41,7 +41,7 @@ FRONT END
 
 ## 3. 실행화면
 
-유투브 링크 : https://youtu.be/z_gm35zGYmc
+유투브 링크 : https://youtu.be/fabT4AZYzsE
 
 <br>
 
