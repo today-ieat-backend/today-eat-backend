@@ -33,12 +33,12 @@
     "mysql2": "^2.2.5",
     "nunjucks": "^3.2.3",
     "pm2": "^5.1.0",
-    "sequelize": "^6.6.4"
+    "sequelize": "^6.6.4",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
     "nodemon": "^2.0.10",
-    "sequelize-cli": "^6.2.0",
-    "swagger-jsdoc": "^6.1.0",
-    "swagger-ui-express": "^4.1.6"
+    "sequelize-cli": "^6.2.0"
   }
 }
