@@ -3,7 +3,7 @@
 
 오늘은 또 뭐먹어야하나...   
 이제는 음악, 운동, 요리, 먹방 등 **카테고리별로 나누어 관리하세요!**   
-http://lunch-menu.shop.s3-website.ap-northeast-2.amazonaws.com/
+http://lunch-menu.shop/
 
 https://www.notion.so/15-4b8716eaebb240b7a4748baaa53ed338
 
@@ -41,7 +41,7 @@ FRONT END
 
 ## 3. 실행화면
 
-유투브 링크 : 
+유투브 링크 : https://youtu.be/VAf98TNt9TA
 
 <br>
 
