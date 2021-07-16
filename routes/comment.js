@@ -6,7 +6,6 @@ const Menu = require('../models/menu');
 const User = require('../models/user');
 const Comment = require('../models/comment')
 
-const router = express.Router();
 
 // 저장
 router.post('/comments', async (req, res) => {
@@ -24,17 +23,19 @@ router.post('/comments', async (req, res) => {
     })
     // console.log(result)
     const commentId = result.id
-    // const comment = result.comment
     console.log(comment, commentId, menuId, userId)
-    res.send({ "ok": true, "message": '작성완료!', result, commentId })
+    res.send({ "ok": true, "message": '작성완료!', result })
+    // res.send({ "ok": true, "message": '작성완료!', commentId, comment, menuId, userId })
 })
+
 
 // 불러오기
 router.get("/comments", async (req, res, next) => {
     // comments/:menuId
     // comments?menuId=menuId값
     const { menuId } = req.query
-    const result = await Comment.findAll({
+    // console.log(menuId)
+    const Result = await Comment.findAll({
         where: {
             menuId,
         },
@@ -42,12 +43,38 @@ router.get("/comments", async (req, res, next) => {
             model: User,
         }]
     })
-    // console.log(result)
-    const nick = result[0].User
-    console.log(nick)
-    res.send({ "ok": true, result }) // menu, user 테이블 같이 보냄
 
-});
+    // const entries = await Comment.findAll({ 
+    //     where: { 
+    //         menuId, 
+    //     },
+    //     // include: [{
+    //     //     model: User,
+    //     // }],
+    //     attributes: ['comment', 'id', ], 
+    // })
+
+    // console.log(entries)
+
+    let detailResult = []
+    for ( let i = 0; i < Result.length; i++ ) {
+        const comment = Result[i].comment
+        const commentId = Result[i].id
+        const nickname = Result[i].User['nickname']
+        detailResult.push( {comment, commentId, nickname} )
+    }
+    console.log("-------------------------")
+    console.log(detailResult)
+    console.log(menuId)
+
+    res.send({ "ok": true, result, menuId }) // 모든 값 보냄
+    // res.send({ "ok": true, detailResult, menuId }) // 필요한 값만 뽑아 보냄
+})
+
+// 
+// const entries = await menus.findAll({ where: { userId: currentId }, attributes: ['name', 'description', 'img', 'like', 'userId', 'id', 'category1', 'category2', 'category3'], })
+// 공식문서
+// https://sequelize.org/master/manual/model-querying-basics.html
 
 
 // 삭제
@@ -60,10 +87,10 @@ router.delete("/comments/:id", async (req, res) => {
                 id,
             },
         })
-        res.json({ "ok": true, "message": '댓글삭제 성공' });
+        res.json({ "ok": true, "message": '댓글삭제 성공' })
     } catch (error) {
-        console.error(error);
-        res.json({ "ok": false, "message": '댓글삭제 실패' });
+        console.error(error)
+        res.json({ "ok": false, "message": '댓글삭제 실패' })
     }
 })
 
@@ -74,7 +101,7 @@ router.put("/comments/:id", async (req, res) => {
     try {
         const { id } = req.params;
         let { description, userId } = req.body;
-
+        
         const { userId: commenter } = await Comment.findOne({
             where: { id },
             attributes: ["userId"]
@@ -84,16 +111,18 @@ router.put("/comments/:id", async (req, res) => {
         if (+userId !== commenter) {
             return res.json({ "ok": false, "message": '작성자가 아닙니다' });
         }
-
+        
+        console.log(id, description, userId)
+        console.log("아니 왜 업데이트가 안되는데?")
         await Comment.update({
-            description
+            comment: description,
         }, {
             where: { id }
         });
         res.json({ "ok": true, "message": '댓글수정 성공' });
     } catch (error) {
         console.error(error);
-        res.json({ "ok": false, "message": '댓글삭제 실패' });
+        res.json({ "ok": false, "message": '댓글수정 실패' });
     }
 })
 
