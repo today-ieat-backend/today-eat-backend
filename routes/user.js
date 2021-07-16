@@ -4,7 +4,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 const users = require('../models/user');
+const comments = require('../models/comment');
+const menus = require('../models/menu');
 const authMiddleware = require('../middlewares/auth-middleware');
+require('dotenv').config();
 const Joi = require('joi');
 const router = express.Router();
 
@@ -91,7 +94,6 @@ router.post('/register', async (req, res) => {
 
 })
 
-// 로그인
 router.post('/login', async (req, res) => {
     try {
         const { userId, password } = req.body;
@@ -110,7 +112,7 @@ router.post('/login', async (req, res) => {
 
             const token = jwt.sign({
                 userId: user.userId
-            }, 'secretPlease',
+            }, process.env.JWT_SECRET,
                 { expiresIn: '1h' });
             //토큰 시간이 끝날경우 그에 맞는 에러값을 보내줘보자.
 
@@ -120,7 +122,8 @@ router.post('/login', async (req, res) => {
                     'ok': true,
                     user: {
                         nickname: nickname,
-                        userId: userId
+                        userId: userId,
+                        id: id,
                     }
                 },
             });
@@ -142,6 +145,7 @@ router.post('/login', async (req, res) => {
 
 router.get('/token', authMiddleware, async (req, res) => {
     const { user } = res.locals;
+
     res.send({
         'ok': true,
         user: {
@@ -151,5 +155,20 @@ router.get('/token', authMiddleware, async (req, res) => {
         }
     });
 })
+
+router.get('/entries', authMiddleware, async (req, res) => {
+    const { user } = res.locals;
+    const currentId = user.id;
+    const entries = await menus.findAll({
+        where: { userId: currentId },
+        attributes: ['name', 'description', 'img', 'like', 'userId', 'id', 'category1', 'category2', 'category3'],
+    });
+
+    res.send({
+        'ok': true,
+        entries: entries,
+    });
+})
+
 
 module.exports = router;

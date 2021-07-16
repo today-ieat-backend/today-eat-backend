@@ -10,6 +10,8 @@ const User = require('../models/user');
 const router = express.Router();
 
 
+
+
 try {
     fs.readdirSync('uploads');
 } catch (error) {
@@ -17,8 +19,11 @@ try {
     fs.mkdirSync('uploads');
 };
 
+
+
+
 const upload = multer({
-    storate: multer.diskStorage({
+    storage: multer.diskStorage({
         destination(req, file, cb) {
             console.log('file!!!', file)
             cb(null, 'uploads');
@@ -32,13 +37,16 @@ const upload = multer({
 });
 
 
-//메뉴 카테고리 지정하면, 추천 음식 보내기
+/**
+ *  @swagger
+ *    $ref: 'swagger/menuAPI.yml'
+ */
 router.get('/', async (req, res, next) => {
     try {
         const { category1, category2, category3 } = req.query;
         const menuList = await Menu.findAll({
             where: {
-                [Op.or]: [{ category1 }, { category2 }, { category3 }],
+                [Op.and]: [{ category1 }, { category2 }, { category3 }],
             },
             order: [['like', 'DESC'], ['createdAt', 'DESC']],
         })
@@ -84,9 +92,16 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', upload.single('img'), async (req, res, next) => {
     try {
-
         let { name, description, category1, category2, category3, id: userId } = req.body;
         img = req.file ? `/img/${req.file.filename}` : "/img/default.jpg";
+
+        const dupChkname = await Menu.findOne({
+            where: { name }
+        });
+        if (dupChkname) {
+            res.json({ "ok": false, "message": '이미 등록된 메뉴입니다.' });
+            return
+        }
 
         const result = await Menu.create({
             name,
@@ -112,8 +127,7 @@ router.patch('/:id', upload.single('img'), async (req, res, next) => {
         const { id } = req.params;
 
         let { name, description, category1, category2, category3, id: userId } = req.body;
-        img = req.file ? `/img/${req.file.fieldname}` : "/img/default.jpg";
-
+        img = req.file ? `/img/${req.file.filename}` : "/img/default.jpg";
         const result = await Menu.findOne({
             where: { id },
         });
